@@ -213,18 +213,18 @@ int grades_print_student(struct grades *grades, int id) {
 	}
 
 	student* s = list_get(student_iter);
-	printf("%s %d: ", s->name, s->id);
+	printf("%s %d:", s->name, s->id);
 
 	iterator course_iter = list_begin(s->courses);
 
 	if (list_size(s->courses)) {
 		while (list_next(course_iter)) {
 			course* c = (course*)list_get(course_iter);
-			printf("%s %d, ", c->name, c->grade);
+			printf(" %s %d,", c->name, c->grade);
 			course_iter = list_next(course_iter);
 		}
 		course* c = (course*)list_get(course_iter);
-		printf("%s %d", c->name, c->grade);
+		printf(" %s %d", c->name, c->grade);
 		course_iter = list_next(course_iter);
 	}
 

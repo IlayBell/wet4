@@ -262,7 +262,13 @@ int grades_print_all(struct grades *grades) {
 /*
 	student
 */
-
+/**
+* @brief initialzing a student with given name (without changing param)
+* and id.
+* @param name - the name of the student. remains const.
+* @param id - the id of student
+* @return pointer to the new student obj.
+*/
 student* student_init(const char* name, int id) {
 	student* s = (student*)malloc(sizeof(student));
 	if (!s) {
@@ -286,6 +292,13 @@ student* student_init(const char* name, int id) {
 	return s;
 }
 
+/*
+* @brief makes a copy of given student
+* @param s - pointer to student to copy
+* will cast the void* to student*.
+* @param[out] will be a pointer to the new copy of the student.
+* @return 0 on success, 1 on failure
+*/
 int student_clone(void* s, void** out) {
 	if (!s || !out) {
 		*out = NULL;
@@ -324,6 +337,12 @@ int student_clone(void* s, void** out) {
 	return SUCCESS;
 }
 
+/*
+* @brief destroys the student's object.
+* @param s - pointer to student obj.
+* will cast the void* to student*.
+* @return void.
+*/
 void student_destroy(void* s) {
 	student* s_cast = (student*)s;
 	free(s_cast->name);
@@ -331,6 +350,11 @@ void student_destroy(void* s) {
 	free(s_cast);
 }
 
+/*
+* @brief make a copy of the list of student's courses
+* @param s - pointer to student to copy
+* @return pointer to the copied list
+*/
 list copy_courses(student* s) {
 	list copy = list_init(course_clone, course_destroy);
 
@@ -348,12 +372,24 @@ list copy_courses(student* s) {
 
 }
 
+/*
+* @brief compare function between a student object and its id.
+* @param s - pointer to student
+* will cast the void* to student*.
+* @param id - pointer to id to compare. will cast to int.
+* @return true if the same, flase otherwise
+*/
 bool student_id_comp(const void* s, const void* id) {
 	student* s_cast = (student*)s;
 	int* id_cast = (int*)id;
 	return s_cast->id == *id_cast;
 }
 
+/*
+* @brief calcs the average of given student
+* @param s - pointer to student.
+* @return the avergae grades from all of his courses.
+*/
 float student_calc_avg(student* s) {
 	iterator iter = list_begin(s->courses);
 	float sum = 0;
@@ -367,11 +403,21 @@ float student_calc_avg(student* s) {
 	return sum / list_size(s->courses);
 }
 
+/*
+* @brief adds a course to student
+* @param s - pointer to student
+* @return 0 on success, 1 on failure
+*/
 int add_course(student* s, course* c) {
 	return list_push_back(s->courses, c);
 }
 
 
+/*
+* @brief makes a copy of student's name
+* @param s - pointer to student
+* @return pointer to the copied string. the user should free the memory.
+*/
 char* clone_name_student(student* s) {
 	char* name_copy = (char*)malloc(sizeof(char)*(strlen(s->name)+1));
 	if(!name_copy) {
@@ -386,6 +432,12 @@ char* clone_name_student(student* s) {
 	course
 */
 
+/*
+* @brief initializing new course with given name and grade.
+* @param name - the name of the course
+* @param grade - the grade of the course
+* @return a pointer to the course obj
+*/
 course* course_init(const char* name, int grade) {
 	course* c = (course*)malloc(sizeof(course));
 	if (!c) {
@@ -405,6 +457,13 @@ course* course_init(const char* name, int grade) {
 	return c;
 }
 
+/*
+* @brief makes a copy of given course
+* @param c - pointer to course to copy
+* will cast the void* to course*.
+* @param[out] will be a pointer to the new copy of the course.
+* @return 0 on success, 1 on failure
+*/
 int course_clone(void* c, void** out) {
 	if(!c || !out) {
 		*out = NULL;
@@ -420,12 +479,24 @@ int course_clone(void* c, void** out) {
 
 }
 
+/*
+* @brief destroys the given course
+* @param c - pointer to course to destroy
+* will cast the void* to course*.
+* @return void
+*/
 void course_destroy(void* c) {
 	course* c_cast = (course*)c;
 	free(c_cast->name);
 	free(c_cast);
 }
 
+/*
+* @brief compares between a course name and a given string.
+* @param c - pointer to a course to compare its name
+* @param name - a string which the name will be compared to.
+* @return true if the same, flase otherwise
+*/
 bool course_name_comp(const void* c, const void* name) {
 	course* c_cast = (course*)c;
 	char* name_cast = (char*)name;
@@ -437,6 +508,14 @@ bool course_name_comp(const void* c, const void* name) {
 	common
 */
 
+/*
+* @brief finds an element in a given list
+* @param l - the list that will be searched in
+* @param target - the element to search
+* @param (*comp) - a compare function
+* @return an iterator that holds the target element in list if found,
+* returns null if element doesn't exist in list.
+*/
 iterator find(list l,
 			  const void* target,
 			  bool (*comp)(const void*, const void*)) {

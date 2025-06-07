@@ -42,33 +42,33 @@ struct grades {
 	student header
 */
 
-student* student_init(const char* name, int id);
-int student_clone(void* s, void** out);
-void student_destroy(void* s);
+static student* student_init(const char* name, int id);
+static int student_clone(void* s, void** out);
+static void student_destroy(void* s);
 
-bool student_id_comp(const void* s, const void* id);
+static bool student_id_comp(const void* s, const void* id);
 
-struct list* copy_courses(student* s);
+static struct list* copy_courses(student* s);
 
-float student_calc_avg(student* s);
+static float student_calc_avg(student* s);
 
-int add_course(student* s, course* c);
+static int add_course(student* s, course* c);
 
-char* clone_name_student(student* s);
+static char* clone_name_student(student* s);
 
 /*
 	course header
 */
-course* course_init(const char* name, int grade);
-int course_clone(void* c, void** out);
-void course_destroy(void* c);
+static course* course_init(const char* name, int grade);
+static int course_clone(void* c, void** out);
+static void course_destroy(void* c);
 
-bool course_name_comp(const void* c, const void* name);
+static bool course_name_comp(const void* c, const void* name);
 
 /*
 	common header
 */
-iterator find(list l,
+static iterator find(list l,
 			  const void* target,
 			  bool (*comp)(const void*, const void*));
 
@@ -269,7 +269,7 @@ int grades_print_all(struct grades *grades) {
 * @param id - the id of student
 * @return pointer to the new student obj.
 */
-student* student_init(const char* name, int id) {
+static student* student_init(const char* name, int id) {
 	student* s = (student*)malloc(sizeof(student));
 	if (!s) {
 		return NULL;
@@ -299,7 +299,7 @@ student* student_init(const char* name, int id) {
 * @param[out] will be a pointer to the new copy of the student.
 * @return 0 on success, 1 on failure
 */
-int student_clone(void* s, void** out) {
+static int student_clone(void* s, void** out) {
 	if (!s || !out) {
 		*out = NULL;
 		return FAIL;
@@ -343,7 +343,7 @@ int student_clone(void* s, void** out) {
 * will cast the void* to student*.
 * @return void.
 */
-void student_destroy(void* s) {
+static void student_destroy(void* s) {
 	student* s_cast = (student*)s;
 	free(s_cast->name);
 	list_destroy(s_cast->courses);
@@ -355,7 +355,7 @@ void student_destroy(void* s) {
 * @param s - pointer to student to copy
 * @return pointer to the copied list
 */
-list copy_courses(student* s) {
+static list copy_courses(student* s) {
 	list copy = list_init(course_clone, course_destroy);
 
 	iterator iter = list_begin(s->courses);
@@ -379,7 +379,7 @@ list copy_courses(student* s) {
 * @param id - pointer to id to compare. will cast to int.
 * @return true if the same, flase otherwise
 */
-bool student_id_comp(const void* s, const void* id) {
+static bool student_id_comp(const void* s, const void* id) {
 	student* s_cast = (student*)s;
 	int* id_cast = (int*)id;
 	return s_cast->id == *id_cast;
@@ -390,7 +390,7 @@ bool student_id_comp(const void* s, const void* id) {
 * @param s - pointer to student.
 * @return the avergae grades from all of his courses.
 */
-float student_calc_avg(student* s) {
+static float student_calc_avg(student* s) {
 	iterator iter = list_begin(s->courses);
 	float sum = 0;
 	while (iter != NULL) {
@@ -408,7 +408,7 @@ float student_calc_avg(student* s) {
 * @param s - pointer to student
 * @return 0 on success, 1 on failure
 */
-int add_course(student* s, course* c) {
+static int add_course(student* s, course* c) {
 	return list_push_back(s->courses, c);
 }
 
@@ -418,7 +418,7 @@ int add_course(student* s, course* c) {
 * @param s - pointer to student
 * @return pointer to the copied string. the user should free the memory.
 */
-char* clone_name_student(student* s) {
+static char* clone_name_student(student* s) {
 	char* name_copy = (char*)malloc(sizeof(char)*(strlen(s->name)+1));
 	if(!name_copy) {
 		return NULL;
@@ -438,7 +438,7 @@ char* clone_name_student(student* s) {
 * @param grade - the grade of the course
 * @return a pointer to the course obj
 */
-course* course_init(const char* name, int grade) {
+static course* course_init(const char* name, int grade) {
 	course* c = (course*)malloc(sizeof(course));
 	if (!c) {
 		return NULL;
@@ -464,7 +464,7 @@ course* course_init(const char* name, int grade) {
 * @param[out] will be a pointer to the new copy of the course.
 * @return 0 on success, 1 on failure
 */
-int course_clone(void* c, void** out) {
+static int course_clone(void* c, void** out) {
 	if(!c || !out) {
 		*out = NULL;
 		return FAIL;
@@ -485,7 +485,7 @@ int course_clone(void* c, void** out) {
 * will cast the void* to course*.
 * @return void
 */
-void course_destroy(void* c) {
+static void course_destroy(void* c) {
 	course* c_cast = (course*)c;
 	free(c_cast->name);
 	free(c_cast);
@@ -497,7 +497,7 @@ void course_destroy(void* c) {
 * @param name - a string which the name will be compared to.
 * @return true if the same, flase otherwise
 */
-bool course_name_comp(const void* c, const void* name) {
+static bool course_name_comp(const void* c, const void* name) {
 	course* c_cast = (course*)c;
 	char* name_cast = (char*)name;
 
@@ -516,7 +516,7 @@ bool course_name_comp(const void* c, const void* name) {
 * @return an iterator that holds the target element in list if found,
 * returns null if element doesn't exist in list.
 */
-iterator find(list l,
+static iterator find(list l,
 			  const void* target,
 			  bool (*comp)(const void*, const void*)) {
 	iterator iter = list_begin(l);
